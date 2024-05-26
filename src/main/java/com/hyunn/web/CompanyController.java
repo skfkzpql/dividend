@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,13 +71,14 @@ public class CompanyController {
 
     @DeleteMapping("/{ticker}")
     @PreAuthorize("hasRole('WRITE')")
+    @Transactional
     public ResponseEntity<?> deleteCompany(@PathVariable String ticker) {
         String companyName = this.companyService.deleteCompany(ticker);
         this.clearFinanceCache(companyName);
         return ResponseEntity.ok(companyName);
     }
 
-    public void clearFinanceCache(String companyName) {
+    private void clearFinanceCache(String companyName) {
         this.redisCacheManager.getCache(CacheKey.KEY_FINANCE).evict(companyName);
     }
 }

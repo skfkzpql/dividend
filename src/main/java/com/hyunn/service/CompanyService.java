@@ -76,7 +76,7 @@ public class CompanyService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteAutocompleteKeyword(String keyword) {
+    private void deleteAutocompleteKeyword(String keyword) {
         this.trie.remove(keyword);
     }
 
